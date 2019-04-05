@@ -14,12 +14,14 @@ class ProductDetails extends React.Component {
     
     onBtnCheck = (e, index) => {
        
-        let id = index +1;
+        let productId = this.props.productList[index].id;
         let objectP = {
             checked: !this.props.productList[index].checked,
         }
 
-        fetch(`http://localhost:3001/products/${id}`, {
+        console.log(productId);
+
+        fetch(`http://localhost:3001/products/${productId}`, {
             method : 'PATCH',
             headers: {
                 "Content-Type": "application/json",
@@ -62,26 +64,25 @@ class ProductDetails extends React.Component {
             },
             body: JSON.stringify(objectO)
         })
-
-        console.log(checkedOrderProducts);
     }
 
+
     onBtnExchange = (e, index) => {
-        this.setState((prevState) => ({
-            exchangeForm: !prevState.exchangeForm
-        }))
 
-        //let id = index +1;
+        let productId = this.props.productList[index].id;
+
+        let object = {
+            exchangeForm: !this.props.productList[index].exchangeForm,
+            exchangeValue: this.state.exchangeValue
+        }
         
-
-
-        // fetch(`http://localhost:3001/products/${id}`, {
-        //     method : 'PATCH',
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify()
-        // })
+        fetch(`http://localhost:3001/products/${productId}`, {
+            method : 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(object)
+        })
 
     }
 
@@ -98,15 +99,20 @@ class ProductDetails extends React.Component {
         let product = this.props.productList.map((elem, index) => {
 
             if(elem.orderId === this.props.orderId) {
+
              return <div className="product-item" key={index +1}>
+
                 <p className="product-name">{elem.name}</p>
-                {this.state.exchangeForm && 
+
+                {elem.exchangeForm && 
                 <input 
                 type="text" 
                 value={this.state.exchangeValue}
                 onChange={(e) => this.changeExchangeForm(e, index)}
                 ></input>}
+
                 <p className="product-price">{elem.price}</p>
+
                 <button 
                 className="product-rw" 
                 onClick={(e) => this.onBtnCheck(e, index)}
@@ -114,10 +120,12 @@ class ProductDetails extends React.Component {
                 >
                 odłożone
                 </button>
+
                 <button className="product-return">zwrot</button>
+
                 <button 
                 className="product-exchange"
-                onClick={this.onBtnExchange}
+                onClick={(e) => this.onBtnExchange(e, index)}
                 >
                 wymiana
                 </button>

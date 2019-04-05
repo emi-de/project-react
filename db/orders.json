@@ -5,36 +5,36 @@
       "price": "123,00",
       "payment": "pobranie-dpd",
       "products": "",
-      "productsAreChecked": false,
-      "id": 1
+      "productsAreChecked": true,
+      "orderPaid": false,
+      "id": 1,
+      "orderSend": false
     },
     {
       "number": "124",
       "price": "220,00",
       "payment": "pobranie-dpd",
       "productsAreChecked": false,
-      "id": 2
+      "orderPaid": false,
+      "id": 2,
+      "orderSend": false
     },
     {
       "number": "125",
       "price": "550,00",
       "payment": "przelew",
       "productsAreChecked": false,
+      "orderPaid": false,
       "id": 3
     },
     {
       "number": "126",
-      "price": "65,00",
-      "payment": "payU",
+      "price": "330,00",
+      "payment": "pobranie-poczta",
       "productsAreChecked": false,
+      "orderPaid": false,
+      "orderSend": false,
       "id": 4
-    },
-    {
-      "number": "222",
-      "price": "123",
-      "payment": "przelew",
-      "productsAreChecked": false,
-      "id": 5
     }
   ],
   "products": [
@@ -42,45 +42,30 @@
       "name": "product 1",
       "price": "99,00",
       "orderId": 1,
-      "checked": true,
+      "checked": false,
       "checkedColor": "seagreen",
       "exchangeForm": false,
+      "exchangeValue": "",
       "id": 1
     },
     {
       "name": "product 2",
       "price": "24,00",
       "orderId": 1,
-      "checked": true,
+      "checked": false,
       "checkedColor": "seagreen",
       "exchangeForm": false,
+      "exchangeValue": "",
       "id": 2
-    },
-    {
-      "name": "produkt 1",
-      "price": "30,00",
-      "orderId": 4,
-      "checked": false,
-      "checkedColor": "seagreen",
-      "exchangeForm": false,
-      "id": 3
-    },
-    {
-      "name": "produkt 2",
-      "price": "35,00",
-      "orderId": 4,
-      "checked": false,
-      "checkedColor": "seagreen",
-      "exchangeForm": false,
-      "id": 4
     },
     {
       "name": "produkt 1",
       "price": "250,00",
       "orderId": 3,
-      "checked": false,
+      "checked": true,
       "checkedColor": "seagreen",
       "exchangeForm": false,
+      "exchangeValue": "",
       "id": 5
     },
     {
@@ -90,7 +75,8 @@
       "checked": true,
       "id": 6,
       "checkedColor": "seagreen",
-      "exchangeForm": false
+      "exchangeForm": false,
+      "exchangeValue": ""
     },
     {
       "name": "product 1",
@@ -98,6 +84,8 @@
       "orderId": 2,
       "checked": true,
       "checkedColor": "seagreen",
+      "exchangeForm": false,
+      "exchangeValue": "",
       "id": 7
     }
   ]

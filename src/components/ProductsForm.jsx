@@ -9,6 +9,8 @@ class ProductsForm extends React.Component {
             price: this.props.newProductPrice,
             orderId: this.props.orderId,
             checked: false,
+            exchangeForm: false,
+            exchangeValue: "",
             checkedColor: "seagreen"  
         }
 
@@ -39,7 +41,7 @@ class ProductsForm extends React.Component {
                 value={this.props.newProductPrice}
                 onChange={this.props.onChangePrice}
                 />
-                <button type="submit" className="add-product_button" onClick={this.onSubmitBtn}>Dodaj</button>
+                <button type="submit" className="add-product_button" onClick={this.onSubmitBtn}>Dodaj produkt</button>
             </div>
         )
     }

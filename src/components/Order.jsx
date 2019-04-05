@@ -22,14 +22,66 @@ class Order extends React.Component {
         })
     }
 
-    onBtnClick = (e, index) => {
+    onBtnNumber = (e, index) => {
 
         this.setState((prevState) => ({
             detailsBox: !prevState.detailsBox,
             detailsId: index +1
         }))
     }
+
+    onBtnPaid = (e, index) => {
+
+        let orderId = index +1;
+        let object = {
+            orderPaid: !this.state.orders[index].orderPaid
+        }
+
+        fetch(`http://localhost:3001/orders/${orderId}`, {
+            method : 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(object)
+        })
+
+        window.location.reload();
+    }
     
+    onBtnSend = (e, index) => {
+
+        let orderId = index +1;
+        let object = {
+            orderSend: !this.state.orders[index].orderSend
+        }
+
+        fetch(`http://localhost:3001/orders/${orderId}`, {
+            method : 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(object)
+        })
+
+        window.location.reload();
+    }
+
+    onBtnDelete = (e, index) => {
+
+        let orderId = index +1;
+
+        if (window.confirm("Potwierdź usunięcie zamówienia")) {
+
+        fetch(`http://localhost:3001/orders/${orderId}`, {
+            method : 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+    }
+
+        window.location.reload();
+    }
 
     render() {
 
@@ -42,7 +94,7 @@ class Order extends React.Component {
                     <Button 
                     color="success" 
                     className="order-number"
-                    onClick={(e) => this.onBtnClick(e, index)}
+                    onClick={(e) => this.onBtnNumber(e, index)}
                     >{elem.number}
                     </Button>
                     <p className="order-price">{elem.price}</p>
@@ -54,9 +106,26 @@ class Order extends React.Component {
                         style={{backgroundColor: elem.productsAreChecked ? "seagreen" : ""}}
                         >przygotowane
                         </Button>
-                        <Button color="secondary" className="order-paid">opłacone</Button>
-                        <Button color="secondary" className="order-send">wysłane</Button>
-                        <Button color="secondary" className="order-delete">usuń</Button>
+                        <Button 
+                        color="secondary" 
+                        className="order-paid"
+                        onClick={(e) => this.onBtnPaid(e, index)}
+                        style={{backgroundColor: elem.orderPaid ? "seagreen" : ""}}
+                        > {elem.orderPaid ? "opłacone" : "nieopłacone"}
+                        </Button>
+                        <Button 
+                        color="secondary" 
+                        className="order-send"
+                        onClick={(e) => this.onBtnSend(e, index)}
+                        style={{backgroundColor: elem.orderSend ? "seagreen" : ""}}
+                        >{elem.orderSend ? "wysłane" : "niewysłane"}
+                        </Button>
+                        <Button 
+                        color="secondary" 
+                        className="order-delete"
+                        onClick={(e) => this.onBtnDelete(e, index)}
+                        >usuń
+                        </Button>
                     </div>
                     {this.state.detailsBox && elem.id === this.state.detailsId ? <OrderDetails orderId={elem.id} /> : <div></div>}
                     </div>

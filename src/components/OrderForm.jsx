@@ -8,7 +8,9 @@ class OrderForm extends React.Component {
             number: this.props.newOrderNumber,
             price: this.props.newOrderPrice,
             payment: this.props.newOrderPayment,
-            productsAreChecked: false     
+            productsAreChecked: false,
+            orderPaid: false,
+            orderSend: false   
         }
 
         await fetch('http://localhost:3001/orders', {
@@ -28,7 +30,7 @@ class OrderForm extends React.Component {
 
     render() {
 
-        let paymentType = ["wybierz", "payU", "przelew", "pobranie-dpd", "pobranie-poczta", "pobranie-inpost", "płatność w sklepie"]
+        let paymentType = ["forma płatności", "payU", "przelew", "pobranie-dpd", "pobranie-poczta", "pobranie-inpost", "płatność w sklepie"]
 
         return (
           <div>
