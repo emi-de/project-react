@@ -96,7 +96,7 @@ class ProductDetails extends React.Component {
     render () {
     
 
-        let product = this.props.productList.map((elem, index) => {
+        let product = this.props.productList.map((elem, index) => {  
 
             if(elem.orderId === this.props.orderId) {
 
@@ -111,7 +111,7 @@ class ProductDetails extends React.Component {
                 onChange={(e) => this.changeExchangeForm(e, index)}
                 ></input>}
 
-                <p className="product-price">{elem.price}</p>
+                <p className="product-price">{elem.price.replace(/,/g, '.')} zł</p>
 
                 <button 
                 className="product-rw" 

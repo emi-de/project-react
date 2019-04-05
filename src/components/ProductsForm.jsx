@@ -22,10 +22,29 @@ class ProductsForm extends React.Component {
             body: JSON.stringify(object)
         })
 
+        let priceSum = (Number(this.props.newProductPrice.replace(/,/g, '.')) + Number(this.props.orderPrice.replace(/,/g, '.'))).toFixed(2)
+
+        let newPrice = {
+            price: priceSum
+        }
+
+        fetch(`http://localhost:3001/orders/${this.props.orderId}`, {
+            method : 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newPrice)
+        })
+
+
+
+
         window.location.reload();
     }
 
     render () {
+
+
 
         return (
             <div className="add-product_form">

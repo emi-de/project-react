@@ -9,6 +9,7 @@ class OrderDetails extends React.Component {
         newProductPrice: "",
         orderId: "",
         productList: []
+        
     }
 
     componentDidMount() {
@@ -41,6 +42,7 @@ class OrderDetails extends React.Component {
                 orderId={this.props.orderId}
                 newProductName={this.state.newProductName}
                 newProductPrice={this.state.newProductPrice}
+                orderPrice={this.props.orderPrice}
                 onChangeName={this.onChangeName}
                 onChangePrice={this.onChangePrice}
                  />

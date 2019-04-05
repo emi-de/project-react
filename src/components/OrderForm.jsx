@@ -6,7 +6,8 @@ class OrderForm extends React.Component {
        
         const object = {
             number: this.props.newOrderNumber,
-            price: this.props.newOrderPrice,
+            price: "",
+            //this.props.newOrderPrice,
             payment: this.props.newOrderPayment,
             productsAreChecked: false,
             orderPaid: false,
@@ -42,13 +43,13 @@ class OrderForm extends React.Component {
                 value={this.props.newOrderNumber} 
                 onChange={this.props.onChangeNumber}
                 />
-                <label>Kwota:</label>
-                <input 
+                {/* <label>Kwota:</label> */}
+                {/* <input 
                 type="text" 
                 id="new-order_price" 
                 value={this.props.newOrderPrice} 
                 onChange={this.props.onChangePrice}
-                />
+                /> */}
                 <select id="new-order_payment" 
                 name="payment" 
                 value={this.props.newOrderPayment}

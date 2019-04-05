@@ -2,26 +2,26 @@
   "orders": [
     {
       "number": "123",
-      "price": "123,00",
+      "price": "450.00",
       "payment": "pobranie-dpd",
       "products": "",
-      "productsAreChecked": true,
+      "productsAreChecked": false,
       "orderPaid": false,
       "id": 1,
       "orderSend": false
     },
     {
       "number": "124",
-      "price": "220,00",
+      "price": "415.50",
       "payment": "pobranie-dpd",
-      "productsAreChecked": false,
-      "orderPaid": false,
+      "productsAreChecked": true,
+      "orderPaid": true,
       "id": 2,
-      "orderSend": false
+      "orderSend": true
     },
     {
       "number": "125",
-      "price": "550,00",
+      "price": "",
       "payment": "przelew",
       "productsAreChecked": false,
       "orderPaid": false,
@@ -29,8 +29,8 @@
     },
     {
       "number": "126",
-      "price": "330,00",
-      "payment": "pobranie-poczta",
+      "price": "",
+      "payment": "przelew",
       "productsAreChecked": false,
       "orderPaid": false,
       "orderSend": false,
@@ -39,54 +39,54 @@
   ],
   "products": [
     {
-      "name": "product 1",
-      "price": "99,00",
+      "name": "produkt 1",
+      "price": "220,00",
       "orderId": 1,
       "checked": false,
-      "checkedColor": "seagreen",
       "exchangeForm": false,
       "exchangeValue": "",
+      "checkedColor": "seagreen",
       "id": 1
     },
     {
-      "name": "product 2",
-      "price": "24,00",
+      "name": "produkt 2",
+      "price": "230,00",
       "orderId": 1,
       "checked": false,
-      "checkedColor": "seagreen",
       "exchangeForm": false,
       "exchangeValue": "",
+      "checkedColor": "seagreen",
       "id": 2
     },
     {
       "name": "produkt 1",
-      "price": "250,00",
-      "orderId": 3,
-      "checked": true,
-      "checkedColor": "seagreen",
-      "exchangeForm": false,
+      "price": "125,50",
+      "orderId": 2,
+      "checked": false,
+      "exchangeForm": true,
       "exchangeValue": "",
-      "id": 5
+      "checkedColor": "seagreen",
+      "id": 3
     },
     {
       "name": "produkt 2",
-      "price": "200,00",
-      "orderId": 3,
-      "checked": true,
-      "id": 6,
-      "checkedColor": "seagreen",
-      "exchangeForm": false,
-      "exchangeValue": ""
-    },
-    {
-      "name": "product 1",
-      "price": "220,00",
+      "price": "234,00",
       "orderId": 2,
       "checked": true,
-      "checkedColor": "seagreen",
       "exchangeForm": false,
       "exchangeValue": "",
-      "id": 7
+      "checkedColor": "seagreen",
+      "id": 4
+    },
+    {
+      "name": "produkt 3",
+      "price": "56,00",
+      "orderId": 2,
+      "checked": true,
+      "exchangeForm": false,
+      "exchangeValue": "",
+      "checkedColor": "seagreen",
+      "id": 5
     }
   ]
 }

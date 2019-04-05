@@ -50,7 +50,7 @@ class Order extends React.Component {
     
     onBtnSend = (e, index) => {
 
-        let orderId = index +1;
+        let orderId = this.state.orders[index].id;
         let object = {
             orderSend: !this.state.orders[index].orderSend
         }
@@ -68,7 +68,7 @@ class Order extends React.Component {
 
     onBtnDelete = (e, index) => {
 
-        let orderId = index +1;
+        let orderId = this.state.orders[index].id;
 
         if (window.confirm("Potwierdź usunięcie zamówienia")) {
 
@@ -127,7 +127,7 @@ class Order extends React.Component {
                         >usuń
                         </Button>
                     </div>
-                    {this.state.detailsBox && elem.id === this.state.detailsId ? <OrderDetails orderId={elem.id} /> : <div></div>}
+                    {this.state.detailsBox && elem.id === this.state.detailsId ? <OrderDetails orderId={elem.id} orderPrice={elem.price} /> : <div></div>}
                     </div>
                 ))
                 }
