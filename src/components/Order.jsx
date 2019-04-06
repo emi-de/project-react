@@ -14,25 +14,26 @@ class Order extends React.Component {
     }
 
     componentDidMount() {
-
-        fetch('http://localhost:3001/orders').then(response => response.json()).then( data => {
-            this.setState({
-                orders: data
-            })
-        })
+        this.getOrderListFromDatabase();
     }
+
+    getOrderListFromDatabase = () => fetch('http://localhost:3001/orders').then(response => response.json()).then( data => {
+        this.setState({
+            orders: data
+        })
+    })
 
     onBtnNumber = (e, index) => {
 
         this.setState((prevState) => ({
             detailsBox: !prevState.detailsBox,
-            detailsId: index +1
+            detailsId: this.state.orders[index].id
         }))
     }
 
     onBtnPaid = (e, index) => {
 
-        let orderId = index +1;
+        let orderId = this.state.orders[index].id;
         let object = {
             orderPaid: !this.state.orders[index].orderPaid
         }
@@ -80,31 +81,40 @@ class Order extends React.Component {
         })
     }
 
-        window.location.reload();
+    window.location.reload();
     }
 
     render() {
+
+        
 
     let ordersList = this.state.orders;
         
         return (
             <div>
                 {ordersList.map((elem, index) => (
-                <div className="order-item" key={elem.id}>
+
+                <div className="order-item" key={elem.id} >
                     <Button 
                     color="success" 
                     className="order-number"
                     onClick={(e) => this.onBtnNumber(e, index)}
+                    
                     >{elem.number}
                     </Button>
-                    <p className="order-price">{elem.price}</p>
+                    <p className="order-price">{elem.price} PLN</p>
+
+                    <div className="return-sum" style={{display: elem.returnProducts ? "block" : "none"}}>
+                    <p>Do zwrotu: {elem.returnAmount} PLN</p>
+                    </div>
+
                     <p className="order-payment">{elem.payment}</p>
-                    <div className="order-info">
+                    <div className="order-info" class="btn-group" role="group" aria-label="Basic example" >
                         <Button 
                         color="secondary" 
                         className="order-rw"
                         style={{backgroundColor: elem.productsAreChecked ? "seagreen" : ""}}
-                        >przygotowane
+                        >{elem.productsAreChecked ? "przygotowane" : "do przygotowania"}
                         </Button>
                         <Button 
                         color="secondary" 
@@ -127,7 +137,7 @@ class Order extends React.Component {
                         >usuń
                         </Button>
                     </div>
-                    {this.state.detailsBox && elem.id === this.state.detailsId ? <OrderDetails orderId={elem.id} orderPrice={elem.price} /> : <div></div>}
+                    {this.state.detailsBox && elem.id === this.state.detailsId ? <OrderDetails orderId={elem.id} orderPrice={elem.price} returnAmount={elem.returnAmount} getOrderListFromDatabase={this.getOrderListFromDatabase}/> : <div></div>}
                     </div>
                 ))
                 }

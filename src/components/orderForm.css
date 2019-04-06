@@ -1,0 +1,12 @@
+.order-form {
+
+    width: 800px;
+    border: 1px solid grey;
+    background-color: #688080;
+    padding: 10px;
+    margin: 5px auto;
+    width: 800px;
+    text-align: center;
+    display: flex;
+    justify-content: space-around
+}

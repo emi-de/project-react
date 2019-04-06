@@ -1,4 +1,6 @@
 import React from 'react';
+// eslint-disable-next-line
+import orderForm from './orderForm.css';
 
 class OrderForm extends React.Component {
     
@@ -34,14 +36,14 @@ class OrderForm extends React.Component {
         let paymentType = ["forma płatności", "payU", "przelew", "pobranie-dpd", "pobranie-poczta", "pobranie-inpost", "płatność w sklepie"]
 
         return (
-          <div>
-            <form>
-                <label>Numer zamówienia:</label>
+          <div className="order-form_box">
+            <form className="order-form">
                 <input 
                 type="text" 
                 id="new-order_number" 
                 value={this.props.newOrderNumber} 
                 onChange={this.props.onChangeNumber}
+                placeholder="Wpisz numer zamówienia"
                 />
                 {/* <label>Kwota:</label> */}
                 {/* <input 

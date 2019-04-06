@@ -9,9 +9,9 @@ class ProductsForm extends React.Component {
             price: this.props.newProductPrice,
             orderId: this.props.orderId,
             checked: false,
-            exchangeForm: false,
-            exchangeValue: "",
-            checkedColor: "seagreen"  
+            checkedColor: "seagreen",
+            returnProduct: false,
+            exchangeProduct: false
         }
 
         fetch('http://localhost:3001/products', {

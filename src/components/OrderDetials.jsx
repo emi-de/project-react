@@ -13,13 +13,14 @@ class OrderDetails extends React.Component {
     }
 
     componentDidMount() {
-
-        fetch('http://localhost:3001/products').then(response => response.json()).then( data => {
-            this.setState({
-                productList: data
-            })
-        })
+        this.getproductListFromDatabase()
     }
+
+    getproductListFromDatabase = () => fetch('http://localhost:3001/products').then(response => response.json()).then( data => {
+        this.setState({
+            productList: data
+        })
+    })
 
     onChangeName = (e) => {
         this.setState({
@@ -49,6 +50,9 @@ class OrderDetails extends React.Component {
                 <ProductDetails 
                 orderId={this.props.orderId}
                 productList={this.state.productList}
+                returnAmount={this.props.returnAmount}
+                getproductListFromDatabase={this.getproductListFromDatabase}
+                getOrderListFromDatabase={this.props.getOrderListFromDatabase}
                 />
                 
             </div>
