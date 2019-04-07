@@ -7,3 +7,20 @@
     text-align: center;
     background-color: #A2BBBB;
 }
+
+.order-number {
+    width: 150px;
+}
+
+.order-price {
+    padding: 5px;
+}
+
+.order-payment {
+    padding: 5px;
+}
+
+.order-textarea {
+    margin: 10px auto;
+    font-size: 10px;
+}

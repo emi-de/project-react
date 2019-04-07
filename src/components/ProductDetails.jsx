@@ -1,79 +1,40 @@
 import React from 'react';
 // eslint-disable-next-line
-import product from './product.css';
-
+import product from './productDetails.css';
 
 
     
 class ProductDetails extends React.Component {
 
-    onBtnCheck = async (e, index) => {
 
-        console.log(this.props.productList[index].checked);
+    onBtnCheck = async (e, index) => {
        
         let productId = this.props.productList[index].id;
-        let objectP = {
+        let orderId = this.props.productList[index].orderId;
+        let object = {
             checked: !this.props.productList[index].checked,
         }
 
+        
         await fetch(`http://localhost:3001/products/${productId}`, {
             method : 'PATCH',
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(objectP)
+            body: JSON.stringify(object)
         })
 
-
-        let orderProducts = [];
-        let checkedOrderProducts = [];
-        let orderId = this.props.productList[index].orderId
-        let objectO = {};
-
-        this.props.productList.map((elem) => {
-            if(elem.orderId === orderId) {
-                orderProducts.push(elem)
-            }
-        })
-
-        this.props.productList.map((elem) => {
-            if(elem.orderId === orderId && elem.checked) {
-                checkedOrderProducts.push(elem)
-                
-            }
-        })
-
-        
-
-        //tutaj trzeba poprawić:
-
-        if(orderProducts.length === checkedOrderProducts.length) {
-            objectO = {
-                productsAreChecked: true
-            }
-        } else {
-            objectO = {
-                productsAreChecked: false
-            }
-        }
-
-        await fetch(`http://localhost:3001/orders/${orderId}`, {
-            method : 'PATCH',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(objectO)
-        })
-
+        //await this.props.getChekedProducts(orderId);
         await this.props.getproductListFromDatabase();
-        await this.props.getOrderListFromDatabase();
     }
-
 
 
     onBtnReturn = async (e, index) => {
 
         let productId = this.props.productList[index].id;
+        let orderId = this.props.productList[index].orderId;
+        let productPrice = this.props.productList[index].price;
+        let returnProduct = !this.props.productList[index].returnProduct
         let objectP = {
             returnProduct: !this.props.productList[index].returnProduct
         }
@@ -85,58 +46,71 @@ class ProductDetails extends React.Component {
             },
             body: JSON.stringify(objectP)
         })
-
-        let orderId = this.props.productList[index].orderId
-
-        let objectO = {};
-
-        if(this.props.productList[index].returnProduct) {
-        objectO = {
-            returnAmount: Number(this.props.returnAmount) + Number(this.props.productList[index].price.replace(/,/g, '.')),
-            returnProducts: !this.props.productList[index].returnProduct
-            }
-        } else {
-            objectO = {
-                returnAmount: Number(this.props.returnAmount) - Number(this.props.productList[index].price.replace(/,/g, '.')),
-                returnProducts: !this.props.productList[index].returnProduct
-            }
-        }
-
-        await fetch(`http://localhost:3001/orders/${orderId}`, {
-            method : 'PATCH',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(objectO)
-        })
-
-        this.props.getproductListFromDatabase();
-        this.props.getOrderListFromDatabase();
-
+        await this.props.getAmountAfterReturn(orderId, productPrice, returnProduct);
+        await this.props.getproductListFromDatabase();
+        await this.props.getOrderListFromDatabase();
     }
 
 
-    onBtnExchange = (e, index) => {
+    onBtnExchange = async (e, index) => {
 
         let productId = this.props.productList[index].id;
-        let ProductName = prompt("podaj nowy produkt")
-        let ProductPrice = prompt("podaj cenę")
+        let orderId = this.props.productList[index].orderId;
+        let exchangeProduct = !this.props.productList[index].exchangeProduct;
+        let amountDifference = "";
+        let productName = "";
+        let productPrice = "";
 
-        let object = {
-            exchangeProduct: !this.props.productList[index].exchangeProduct,
-            exchangeProductName: ProductName,
-            exchangeProductPrice: ProductPrice   
+        if(!this.props.productList[index].exchangeProduct){
+
+            productName = prompt("podaj nowy produkt")
+            productPrice = prompt("podaj cenę")
+            
+
+            let object = {
+                checked: false,
+                exchangeProduct: !this.props.productList[index].exchangeProduct,
+                exchangeProductName: productName,
+                exchangeProductPrice: productPrice   
+            }
+            
+            await fetch(`http://localhost:3001/products/${productId}`, {
+                method : 'PATCH',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(object)
+            })
+
+            amountDifference = (Number(this.props.productList[index].price.replace(/,/g, '.')) - Number(productPrice.replace(/,/g, '.'))).toFixed(2)
+
+            this.props.getproductListFromDatabase(); 
         }
-        
-        fetch(`http://localhost:3001/products/${productId}`, {
-            method : 'PATCH',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(object)
-        })
 
+        if(this.props.productList[index].exchangeProduct){
 
+            let object = {
+                exchangeProduct: !this.props.productList[index].exchangeProduct,
+                exchangeProductName: "",
+                exchangeProductPrice: ""   
+            }
+            
+            await fetch(`http://localhost:3001/products/${productId}`, {
+                method : 'PATCH',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(object)
+            })
+
+            amountDifference = (Number(productPrice.replace(/,/g, '.')) + Number(this.props.productList[index].price.replace(/,/g, '.'))).toFixed(2)
+
+            this.props.getproductListFromDatabase();
+        }
+
+        await this.props.getAmountAfterExchange(orderId, amountDifference, exchangeProduct);
+        await this.props.getproductListFromDatabase();
+        await this.props.getOrderListFromDatabase();
     }
 
 
@@ -144,60 +118,60 @@ class ProductDetails extends React.Component {
     render () {
 
         let product = this.props.productList.map((elem, index) => {  
-
+    
             if(elem.orderId === this.props.orderId) {
 
-             return <div className="product-item" key={index +1}>
+             return <div className="product-box" key={index +1}>
+                <div className="product-smallbox">
+                    <div className="product-item">
+                        <div 
+                        className="product-name" 
+                        style={{textDecoration: elem.exchangeProduct || elem.returnProduct ? "line-through" : "none"}}>{elem.name}
+                        </div>
 
-                <div>
-                <p 
-                className="product-name" 
-                style={{textDecoration: elem.exchangeProduct || elem.returnProduct ? "line-through" : "none"}}>{elem.name}
-                </p>
-
-                <p 
-                className="product-price" 
-                style={{textDecoration: elem.exchangeProduct || elem.returnProduct ? "line-through" : "none"}}>{parseInt(elem.price).toFixed(2).replace(/,/g, '.')} PLN
-                </p>
+                        <div 
+                        className="product-price" 
+                        style={{textDecoration: elem.exchangeProduct || elem.returnProduct ? "line-through" : "none"}}>{parseInt(elem.price).toFixed(2).replace(/,/g, '.')} PLN
+                        </div>
+                    </div>
+                    
+                    <div className="product-exchange" style={{display: elem.exchangeProduct ? "block" : "none"}}>
+                    <div className="product-item"> 
+                        <div className="product-name">{elem.exchangeProduct ? elem.exchangeProductName : ""}  </div>
+                        <div className="product-price">{elem.exchangeProduct ? elem.exchangeProductPrice.replace(/,/g, '.') : ""} PLN</div>
+                    </div>
+                    </div>
                 </div>
+                <div className="btn-group">
+                    <button 
+                    className="product-rw btn btn-light" 
+                    onClick={(e) => this.onBtnCheck(e, index)}
+                    style={{backgroundColor: elem.checked ? elem.checkedColor : ""}}
+                    >
+                    { elem.checked ? "odłożone" : "do odłożenia"}
+                    </button>
 
-                <div className="product-exchange" style={{display: elem.exchangeProduct ? "block" : "none"}}>
-                <p className="product-name">{elem.exchangeProduct ? elem.exchangeProductName : ""}  </p>
-                <p className="product-price">{elem.exchangeProduct ? elem.exchangeProductPrice.replace(/,/g, '.') : ""} PLN</p>
+                    <button 
+                    className="product-return btn btn-light"
+                    onClick={(e) => this.onBtnReturn(e, index)}
+                    >zwrot
+                    </button>
+
+                    <button 
+                    className="product-exchange btn btn-light"
+                    onClick={(e) => this.onBtnExchange(e, index)}
+                    >
+                    wymiana
+                    </button>
                 </div>
-
-                <button 
-                className="product-rw" 
-                onClick={(e) => this.onBtnCheck(e, index)}
-                style={{backgroundColor: elem.checked ? elem.checkedColor : ""}}
-                >
-                { elem.checked ? "odłożone" : "do odłożenia"}
-                </button>
-
-                <button 
-                className="product-return"
-                onClick={(e) => this.onBtnReturn(e, index)}
-                >zwrot
-                </button>
-
-                <button 
-                className="product-exchange"
-                onClick={(e) => this.onBtnExchange(e, index)}
-                >
-                wymiana
-                </button>
+                
             </div>  
             } else {
                 return null;
             }
-
         })
 
-       
         return product;    
-            
-           
-        
   }
 }
 

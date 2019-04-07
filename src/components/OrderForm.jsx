@@ -9,8 +9,8 @@ class OrderForm extends React.Component {
         const object = {
             number: this.props.newOrderNumber,
             price: "",
-            //this.props.newOrderPrice,
             payment: this.props.newOrderPayment,
+            text: "",
             productsAreChecked: false,
             orderPaid: false,
             orderSend: false   
@@ -24,44 +24,46 @@ class OrderForm extends React.Component {
             body: JSON.stringify(object)
         }).then( resp => resp.json())
         .then( data => {
-
-        console.log(data);
-        console.log(object);
+            console.log(data);
+            console.log(object);
         })
             
     }
 
     render() {
 
-        let paymentType = ["forma płatności", "payU", "przelew", "pobranie-dpd", "pobranie-poczta", "pobranie-inpost", "płatność w sklepie"]
+        let paymentType = ["payU", "przelew", "pobranie-dpd", "pobranie-poczta", "pobranie-inpost", "płatność w sklepie"]
 
         return (
-          <div className="order-form_box">
-            <form className="order-form">
+          <div className="order-form_box form-group">
+            <form className="order-form ">
                 <input 
                 type="text" 
-                id="new-order_number" 
+                id="new-order_number"
+                className="form-control"
                 value={this.props.newOrderNumber} 
                 onChange={this.props.onChangeNumber}
                 placeholder="Wpisz numer zamówienia"
                 />
-                {/* <label>Kwota:</label> */}
-                {/* <input 
-                type="text" 
-                id="new-order_price" 
-                value={this.props.newOrderPrice} 
-                onChange={this.props.onChangePrice}
-                /> */}
-                <select id="new-order_payment" 
+                <select 
+                id="new-order_payment "
+                className="form-control"
+                style={{width: "auto"}}
                 name="payment" 
                 value={this.props.newOrderPayment}
                 onChange={this.props.onChangePayment} >
+                <option defaultValue>Wybierz płatność</option>
                     {paymentType.map((elem, index) => (
                         <option key={index +1} value={elem}>{elem}</option>
                     ))
                     }                    
                 </select>
-                <button type="submit" className="add-item_button" onClick={this.onSubmitBtn}> dodaj zamówienie </button>
+                <button 
+                type="submit" 
+                className="add-item_button btn btn-light btn-sm" 
+                onClick={this.onSubmitBtn}> 
+                Dodaj zamówienie 
+                </button>
             </form>            
           </div>
         )

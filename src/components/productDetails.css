@@ -1,0 +1,35 @@
+.product-box {
+    padding: 10px;
+    margin: 5px auto;
+    border: 1px solid grey;
+    background-color: #D7E1E1;
+    display: flex;
+    justify-content: space-between;
+}
+
+.product-smallbox {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.product-item {
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.product-name {
+    width: 60%;
+    background-color: #fff;
+    padding: 3px;
+    border: 1px solid grey;
+}
+
+.product-price {
+    width: 40%;
+    padding: 3px;
+    border: 1px solid grey;
+}

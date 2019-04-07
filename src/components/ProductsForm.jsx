@@ -1,8 +1,10 @@
 import React from 'react';
+// eslint-disable-next-line
+import productForm from './productForm.css';
 
 class ProductsForm extends React.Component {
 
-    onSubmitBtn = (e) => {
+    onSubmitBtn = async (e) => {
 
         const object = {
             name: this.props.newProductName,
@@ -14,7 +16,7 @@ class ProductsForm extends React.Component {
             exchangeProduct: false
         }
 
-        fetch('http://localhost:3001/products', {
+        await fetch('http://localhost:3001/products', {
             method : 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -28,7 +30,7 @@ class ProductsForm extends React.Component {
             price: priceSum
         }
 
-        fetch(`http://localhost:3001/orders/${this.props.orderId}`, {
+        await fetch(`http://localhost:3001/orders/${this.props.orderId}`, {
             method : 'PATCH',
             headers: {
                 "Content-Type": "application/json",
@@ -36,10 +38,8 @@ class ProductsForm extends React.Component {
             body: JSON.stringify(newPrice)
         })
 
-
-
-
-        window.location.reload();
+        await this.props.getproductListFromDatabase();
+        await this.props.getOrderListFromDatabase();
     }
 
     render () {
@@ -53,12 +53,14 @@ class ProductsForm extends React.Component {
                 className="add-product_name"
                 value={this.props.newProductName} 
                 onChange={this.props.onChangeName}
+                placeholder="Nazwa produktu"
                 />
                 <input 
                 type="text" 
                 className="add-product_price"
                 value={this.props.newProductPrice}
                 onChange={this.props.onChangePrice}
+                placeholder="Cena produktu"
                 />
                 <button type="submit" className="add-product_button" onClick={this.onSubmitBtn}>Dodaj produkt</button>
             </div>

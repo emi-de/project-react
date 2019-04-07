@@ -9,12 +9,15 @@ class Order extends React.Component {
 
     state={
         orders: [],
+        productList: [],
         detailsBox: false,
-        detailsId: ""
+        detailsId: "",
+        numberBtnColor: false
     }
 
     componentDidMount() {
         this.getOrderListFromDatabase();
+        this.getproductListFromDatabase();
     }
 
     getOrderListFromDatabase = () => fetch('http://localhost:3001/orders').then(response => response.json()).then( data => {
@@ -22,6 +25,131 @@ class Order extends React.Component {
             orders: data
         })
     })
+
+    getproductListFromDatabase = () => fetch('http://localhost:3001/products').then(response => response.json()).then( data => {
+        this.setState({
+            productList: data
+        })
+    })
+
+    // getChekedProducts = async (id) => {
+
+    //     let orderProducts = [];
+    //     let checkedOrderProducts = [];
+    //     let object = {};
+
+    //     this.state.productList.map((elem) => {
+    //         if(elem.orderId === id){
+    //             orderProducts.push(elem);
+    //         }
+    //     })
+
+    //     this.state.productList.map((elem) => {
+    //         if(elem.orderId === id && elem.checked){
+    //             checkedOrderProducts.push(elem);
+    //         }
+    //     })
+
+    //     if(orderProducts.length === checkedOrderProducts.length && orderProducts.length > 0) {
+    //             object = {
+    //                productsAreChecked: true
+    //            }
+    //         } else {
+    //             object = {
+    //                  productsAreChecked: false
+    //             }
+    //      }
+
+    //      await fetch(`http://localhost:3001/orders/${id}`, {
+    //         method : 'PATCH',
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //          body: JSON.stringify(object)
+    //      })
+
+    //      this.getOrderListFromDatabase();
+
+    // }
+
+    getChekedProducts = async (e, index) => {
+
+        let orderId = this.state.orders[index].id;
+        let object = {
+            productsAreChecked: !this.state.orders[index].productsAreChecked
+        }
+
+        await fetch(`http://localhost:3001/orders/${orderId}`, {
+            method : 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(object)
+        })
+
+        await this.getOrderListFromDatabase();
+    }
+
+
+
+    getAmountAfterReturn = async (id, price, returnProduct) => {
+
+        let orderPrice;
+
+        this.state.orders.map((elem) => {
+            if(elem.id === id && returnProduct){
+                orderPrice = (Number(elem.price.replace(/,/g, '.')) - Number(price.replace(/,/g, '.'))).toFixed(2)
+                
+            
+            } else if (elem.id === id && !returnProduct){
+                orderPrice = (Number(elem.price.replace(/,/g, '.')) + Number(price.replace(/,/g, '.'))).toFixed(2)
+            }
+        })
+
+        let object = {
+            price: orderPrice
+        }
+
+        await fetch(`http://localhost:3001/orders/${id}`, {
+            method : 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+             body: JSON.stringify(object)
+         })
+
+         await this.getOrderListFromDatabase();
+    }
+
+    getAmountAfterExchange = async (id, amountDifference, exchangeProduct) => {
+
+        let orderPrice;
+
+        this.state.orders.map((elem) => {
+            if(elem.id === id && exchangeProduct){
+                orderPrice = (Number(elem.price.replace(/,/g, '.')) - Number(amountDifference.replace(/,/g, '.'))).toFixed(2)
+                this.getOrderListFromDatabase();
+            
+            } else if (elem.id === id && !exchangeProduct){
+                orderPrice = (Number(elem.price.replace(/,/g, '.')) + Number(amountDifference.replace(/,/g, '.'))).toFixed(2)
+                this.getOrderListFromDatabase();
+            }
+        })
+
+        let object = {
+            price: orderPrice
+        }
+
+        await fetch(`http://localhost:3001/orders/${id}`, {
+            method : 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+             body: JSON.stringify(object)
+         })
+         await this.getOrderListFromDatabase();
+    }
+
 
     onBtnNumber = (e, index) => {
 
@@ -31,14 +159,14 @@ class Order extends React.Component {
         }))
     }
 
-    onBtnPaid = (e, index) => {
+    onBtnPaid = async (e, index) => {
 
         let orderId = this.state.orders[index].id;
         let object = {
             orderPaid: !this.state.orders[index].orderPaid
         }
 
-        fetch(`http://localhost:3001/orders/${orderId}`, {
+        await fetch(`http://localhost:3001/orders/${orderId}`, {
             method : 'PATCH',
             headers: {
                 "Content-Type": "application/json",
@@ -46,17 +174,17 @@ class Order extends React.Component {
             body: JSON.stringify(object)
         })
 
-        window.location.reload();
+        await this.getOrderListFromDatabase();
     }
     
-    onBtnSend = (e, index) => {
+    onBtnSend = async (e, index) => {
 
         let orderId = this.state.orders[index].id;
         let object = {
             orderSend: !this.state.orders[index].orderSend
         }
 
-        fetch(`http://localhost:3001/orders/${orderId}`, {
+       await fetch(`http://localhost:3001/orders/${orderId}`, {
             method : 'PATCH',
             headers: {
                 "Content-Type": "application/json",
@@ -64,29 +192,45 @@ class Order extends React.Component {
             body: JSON.stringify(object)
         })
 
-        window.location.reload();
+        await this.getOrderListFromDatabase();
     }
 
-    onBtnDelete = (e, index) => {
+    onBtnDelete = async (e, index) => {
 
         let orderId = this.state.orders[index].id;
 
         if (window.confirm("Potwierdź usunięcie zamówienia")) {
 
-        fetch(`http://localhost:3001/orders/${orderId}`, {
+        await fetch(`http://localhost:3001/orders/${orderId}`, {
             method : 'DELETE',
             headers: {
                 "Content-Type": "application/json",
             }
-        })
+         })
+        }
+        
+        await this.getOrderListFromDatabase();
     }
 
-    window.location.reload();
+    onTxtChange = async (e, index) => {
+        let orderId = this.state.orders[index].id;
+        let object = {
+            text: e.target.value
+        }
+
+       await fetch(`http://localhost:3001/orders/${orderId}`, {
+            method : 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(object)
+        })
+
+        await this.getOrderListFromDatabase();
+
     }
 
     render() {
-
-        
 
     let ordersList = this.state.orders;
         
@@ -96,23 +240,26 @@ class Order extends React.Component {
 
                 <div className="order-item" key={elem.id} >
                     <Button 
-                    color="success" 
-                    className="order-number"
+                    color="success"
+                    className="order-number btn-lg"
                     onClick={(e) => this.onBtnNumber(e, index)}
-                    
-                    >{elem.number}
+                    >Nr: {elem.number}
                     </Button>
-                    <p className="order-price">{elem.price} PLN</p>
-
-                    <div className="return-sum" style={{display: elem.returnProducts ? "block" : "none"}}>
-                    <p>Do zwrotu: {elem.returnAmount} PLN</p>
+                    <div 
+                    className="order-price">
+                    Wartość zamówienia: {elem.price} PLN
                     </div>
 
-                    <p className="order-payment">{elem.payment}</p>
-                    <div className="order-info" class="btn-group" role="group" aria-label="Basic example" >
+                    <div 
+                    className="order-payment">
+                    Płatność: {elem.payment}
+                    </div>
+
+                    <div className="order-info" className="btn-group" role="group"  >
                         <Button 
                         color="secondary" 
                         className="order-rw"
+                        onClick={(e) => this.getChekedProducts(e, index)}
                         style={{backgroundColor: elem.productsAreChecked ? "seagreen" : ""}}
                         >{elem.productsAreChecked ? "przygotowane" : "do przygotowania"}
                         </Button>
@@ -137,7 +284,28 @@ class Order extends React.Component {
                         >usuń
                         </Button>
                     </div>
-                    {this.state.detailsBox && elem.id === this.state.detailsId ? <OrderDetails orderId={elem.id} orderPrice={elem.price} returnAmount={elem.returnAmount} getOrderListFromDatabase={this.getOrderListFromDatabase}/> : <div></div>}
+                    <div className="input-group order-textarea" style={{width: "60%"}}>
+                        <div className="input-group-prepend">
+                        <span className="input-group-text">Uwagi</span>
+                    </div>
+                    <textarea 
+                    className="form-control" 
+                    value={elem.text}
+                    onChange={(e) => this.onTxtChange(e, index)}>
+                    </textarea>
+                    </div>
+
+                    {this.state.detailsBox && elem.id === this.state.detailsId ? <OrderDetails 
+                    orderId={elem.id} 
+                    orderPrice={elem.price} 
+                    returnAmount={elem.returnAmount} 
+                    getOrderListFromDatabase={this.getOrderListFromDatabase} 
+                    getproductListFromDatabase={this.getproductListFromDatabase} 
+                    productList={this.state.productList}
+                    getChekedProducts={this.getChekedProducts}
+                    getAmountAfterReturn={this.getAmountAfterReturn}
+                    getAmountAfterExchange={this.getAmountAfterExchange}
+                     /> : <div></div>}
                     </div>
                 ))
                 }

@@ -1,6 +1,8 @@
 import React from 'react';
 import ProductsForm from './ProductsForm';
 import ProductDetails from './ProductDetails';
+// eslint-disable-next-line
+import orderDetails from './orderDetails.css';
 
 class OrderDetails extends React.Component {
 
@@ -8,19 +10,15 @@ class OrderDetails extends React.Component {
         newProductName: "",
         newProductPrice: "",
         orderId: "",
-        productList: []
+        productList: this.props.productList
         
     }
 
     componentDidMount() {
-        this.getproductListFromDatabase()
+        this.props.getproductListFromDatabase()
     }
 
-    getproductListFromDatabase = () => fetch('http://localhost:3001/products').then(response => response.json()).then( data => {
-        this.setState({
-            productList: data
-        })
-    })
+    
 
     onChangeName = (e) => {
         this.setState({
@@ -38,7 +36,7 @@ class OrderDetails extends React.Component {
     render () {
 
         return (
-            <div>
+            <div className="order-details">
                 <ProductsForm
                 orderId={this.props.orderId}
                 newProductName={this.state.newProductName}
@@ -46,13 +44,18 @@ class OrderDetails extends React.Component {
                 orderPrice={this.props.orderPrice}
                 onChangeName={this.onChangeName}
                 onChangePrice={this.onChangePrice}
+                getproductListFromDatabase={this.props.getproductListFromDatabase}
+                getOrderListFromDatabase={this.props.getOrderListFromDatabase}
                  />
                 <ProductDetails 
                 orderId={this.props.orderId}
-                productList={this.state.productList}
+                productList={this.props.productList}
                 returnAmount={this.props.returnAmount}
-                getproductListFromDatabase={this.getproductListFromDatabase}
+                getproductListFromDatabase={this.props.getproductListFromDatabase}
                 getOrderListFromDatabase={this.props.getOrderListFromDatabase}
+                getChekedProducts={this.props.getChekedProducts}
+                getAmountAfterReturn={this.props.getAmountAfterReturn}
+                getAmountAfterExchange={this.props.getAmountAfterExchange}
                 />
                 
             </div>
